@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bouncy Ball</title>
+    <style></style>
+</head>
+
+<body>
+	<canvas id="gameCanvas" width="400" height="400"> </canvas>	
+	<script>
+	    const FPS= 30;
+	    var bs=30;
+	    var bx,by;
+	    var xv,yv;
+	    var canvas,context;
+	    var color= randomColor();
+	    canvas = document.getElementById("gameCanvas");
+	    context = canvas.getContext("2d");
+
+	    setInterval(update, 500/FPS);
+	    
+	    //ball starting position
+	    bx=Math.round(Math.random() *canvas.width);
+	    by=Math.round(Math.random() *canvas.height);
+	    //starting speed
+	    xv=Math.floor(Math.random() * 76+25)/FPS;
+	    yv=Math.floor(Math.random() * 76+25)/FPS;
+	    
+	    var mousex = 0;
+		var mousey = 0;
+		//what happens when the mouse is on the box
+	    addEventListener("mousemove", function() {
+		  mousex = event.clientX;
+		  mousey = event.clientY;
+		});
+	    //what happens when you click on the canvas
+		addEventListener("click", function(){ color="pink";});	   
+		// random ball direction 
+	    if(Math.floor(Math.random()*2)==0){
+	    	xv = -xv;
+	    }
+	    if(Math.floor(Math.random()*2)==0){
+	    	yv = -yv;
+	    }
+	    //generates a random color
+	    function randomColor() {
+		  return (
+		    "rgba(" +
+		    Math.round(Math.random() * 250) +
+		    "," +
+		    Math.round(Math.random() * 250) +
+		    "," +
+		    Math.round(Math.random() * 250) +
+		    "," +
+		    Math.ceil(Math.random() * 10) / 10 +
+		    ")"
+			);
+		}
+		
+	    function update(){
+	    	//update the position of the box
+	    	bx += xv;
+	    	by += yv;
+	    	//if the mouse hovers on the box
+	    	if(mousex > bx-15 &&
+	    		mousex < bx+15 &&
+	    		mousey > by-15 &&
+	    		mousey < by+15){
+	    		bs+=3;
+	    	}
+	    	//when the mouse is removed and the box size is greater than the starting size
+	    	else if(bs>30){
+	    		bs-=3;
+	    	}
+	    	// changing the color and the direction of the box when it hits the boundaries
+	    	//when it hits the left side
+	    	if(bx-bs/2 <0 && xv<0 ){
+	    		color= randomColor();
+	    		xv=-xv;
+	    	}
+	    	//when it hits the right side 
+	    	if(bx+bs/2 >canvas.width && xv>0 ){
+	    		color= randomColor();
+	    		xv=-xv;
+	    	}
+	    	//when it hits the bottom
+	    	if(by-bs/2 <0 && yv<0 ){
+	    		color= randomColor();
+	    		yv=-yv;
+	    	}
+	    	//when it hits the top
+	    	if(by+bs/2 >canvas.height && yv>0 ){
+	    		color= randomColor();
+	    		yv=-yv;
+	    	}
+	    	//filling the canvas
+	    	context.fillStyle = "pink";
+	    	context.fillRect(0,0,canvas.width,canvas.height);
+	    	//fillinf our box
+	    	context.fillStyle = color;
+	    	context.fillRect(bx-bs/2,by-bs/2,bs,bs);
+	    }
+
+	</script>
+</body>
+
+</html>
